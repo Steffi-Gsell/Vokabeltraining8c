@@ -1,0 +1,1135 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Vocab Quest 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* Layout: one centred app column (max 680px); cards for units, one question card per step; notebook-blue ink with a sunflower highlight */
+:root{color-scheme:light;
+  --bg:#EEF3F5; --surface:#FFFFFF; --surface2:#F6F9FA; --ink:#14313A; --muted:#58707A; --line:#D5E0E4;
+  --accent:#F3A93A; --accent-ink:#3B2500; --teal:#1E6C77; --teal-soft:#DCEDEF;
+  --ok:#23845A; --ok-bg:#E1F3E9; --bad:#C24A3F; --bad-bg:#FBE5E2; --warn:#9A6A00; --warn-bg:#FFF2D6;
+  --u1:#1E6C77; --u2:#C25B3A; --u3:#4E7F2E; --u4:#6A4FA3; --uv:#B07A10;
+  --display:"Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono:ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0E1C21; --surface:#162A30; --surface2:#1B323A; --ink:#E5EEF0; --muted:#9BB1B8; --line:#2B434B;
+  --accent:#F2B24E; --accent-ink:#2A1A00; --teal:#64BCC6; --teal-soft:#1D3E44;
+  --ok:#5CC690; --ok-bg:#163A2A; --bad:#F08177; --bad-bg:#3E201D; --warn:#E9BC57; --warn-bg:#3A2E12;
+  --u1:#5FB6C1; --u2:#E58C6C; --u3:#8CC16A; --u4:#A891DD; --uv:#E2B24F; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0E1C21; --surface:#162A30; --surface2:#1B323A; --ink:#E5EEF0; --muted:#9BB1B8; --line:#2B434B;
+  --accent:#F2B24E; --accent-ink:#2A1A00; --teal:#64BCC6; --teal-soft:#1D3E44;
+  --ok:#5CC690; --ok-bg:#163A2A; --bad:#F08177; --bad-bg:#3E201D; --warn:#E9BC57; --warn-bg:#3A2E12;
+  --u1:#5FB6C1; --u2:#E58C6C; --u3:#8CC16A; --u4:#A891DD; --uv:#E2B24F; color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 40px}
+#app{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);font-weight:600;margin:0;text-wrap:balance;line-height:1.15}
+h1{font-size:2rem} h2{font-size:1.4rem} h3{font-size:1.1rem}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.25rem;color:var(--teal)}
+.brand .mark{width:34px;height:34px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:1.05rem}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;background:var(--teal);color:var(--surface);min-height:46px;transition:transform .08s}
+.btn:active{transform:translateY(1px)}
+.btn.accent{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--teal);border:2px solid var(--line)}
+.btn.small{min-height:38px;padding:7px 12px;font-size:.92rem}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.block{width:100%}
+.link{background:none;border:0;color:var(--teal);text-decoration:underline;padding:4px;font-weight:700}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.9rem;font-variant-numeric:tabular-nums}
+.chip b{font-family:var(--display);font-weight:600}
+
+.hero{background:var(--teal);color:var(--surface);border:0}
+.hero .muted{color:inherit;opacity:.85}
+.hero .btn{background:var(--accent);color:var(--accent-ink)}
+
+.unit{display:flex;flex-direction:column;gap:10px}
+.unit-head{display:flex;gap:12px;align-items:center}
+.num{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:var(--surface);background:var(--c,var(--teal));font-size:1.05rem}
+.bar{height:10px;border-radius:99px;background:var(--surface2);border:1px solid var(--line);overflow:hidden}
+.bar > i{display:block;height:100%;background:var(--c,var(--teal));border-radius:99px}
+.unit .meta{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{display:flex;align-items:center;gap:6px;border-radius:10px;padding:6px 10px;font-size:.85rem;border:1px dashed var(--line);color:var(--muted)}
+.badge.on{border:1px solid var(--accent);background:var(--warn-bg);color:var(--ink)}
+.badge svg{flex:none}
+
+/* game */
+.gamehead{display:flex;align-items:center;gap:12px}
+.progress{flex:1;height:12px;border-radius:99px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 18px;display:flex;flex-direction:column;gap:16px}
+.qtype{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.prompt{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.word{font-family:var(--display);font-weight:600;font-size:1.9rem;line-height:1.2;overflow-wrap:anywhere}
+.speak{border:1px solid var(--line);background:var(--surface2);border-radius:50%;width:40px;height:40px;display:grid;place-items:center;color:var(--teal);flex:none}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;border:2px solid var(--line);background:var(--surface2);border-radius:12px;padding:12px 14px;min-height:52px;font-size:1.02rem}
+.opt:hover:not([disabled]){border-color:var(--teal)}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.bad{border-color:var(--bad);background:var(--bad-bg)}
+.opt[disabled]{cursor:default}
+.field{width:100%;border:2px solid var(--line);background:var(--surface2);border-radius:12px;padding:12px 14px;font-size:1.1rem;min-height:52px}
+.field:focus{border-color:var(--teal);outline:none}
+.field.ok{border-color:var(--ok);background:var(--ok-bg)}
+.field.bad{border-color:var(--bad);background:var(--bad-bg)}
+.hint{font-family:var(--mono);letter-spacing:.18em;color:var(--muted);font-size:1rem}
+.fb{border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.fb.ok{background:var(--ok-bg);color:var(--ink)}
+.fb.bad{background:var(--bad-bg);color:var(--ink)}
+.fb.warn{background:var(--warn-bg)}
+.fb strong{font-family:var(--display);font-weight:600;font-size:1.1rem}
+.fb.ok strong{color:var(--ok)} .fb.bad strong{color:var(--bad)} .fb.warn strong{color:var(--warn)}
+.ex{font-style:italic}
+.ex b{font-style:normal;background:var(--warn-bg);padding:0 4px;border-radius:4px}
+.gapline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;line-height:2.1;padding:8px 0;border-bottom:1px solid var(--line)}
+.gapline:last-child{border-bottom:0}
+.gapline select{border:2px solid var(--line);background:var(--surface2);border-radius:10px;padding:4px 8px;min-height:40px;max-width:100%}
+.gapline select.ok{border-color:var(--ok);background:var(--ok-bg)}
+.gapline select.bad{border-color:var(--bad);background:var(--bad-bg)}
+.gapline .fix{color:var(--ok);font-weight:700}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.match .col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.mbtn{border:2px solid var(--line);background:var(--surface2);border-radius:12px;padding:10px;min-height:52px;text-align:center;overflow-wrap:anywhere}
+.mbtn.sel{border-color:var(--teal);background:var(--teal-soft)}
+.mbtn.done{border-color:var(--ok);background:var(--ok-bg);color:var(--muted)}
+.mbtn.shake{border-color:var(--bad);background:var(--bad-bg);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.three label{font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:4px;min-width:0}
+.three .field{font-size:1rem;padding:10px}
+@media (max-width:440px){.three{grid-template-columns:1fr}}
+
+.result-score{font-family:var(--display);font-size:3rem;font-weight:700;color:var(--teal);line-height:1;font-variant-numeric:tabular-nums}
+.misslist{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.misslist li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:6px 0}
+.misslist li span:last-child{color:var(--muted);text-align:right}
+
+textarea.code{width:100%;min-height:120px;border:2px solid var(--line);background:var(--surface2);border-radius:12px;padding:10px;font-family:var(--mono);font-size:.82rem;word-break:break-all;resize:vertical}
+.notice{background:var(--warn-bg);border-radius:12px;padding:10px 14px;font-size:.92rem}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums;background:var(--surface)}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--display);font-weight:600;background:var(--surface2)}
+td .mini{display:inline-block;width:42px;height:7px;border-radius:9px;background:var(--surface2);border:1px solid var(--line);vertical-align:middle;margin-left:6px;overflow:hidden}
+td .mini i{display:block;height:100%;background:var(--teal)}
+.profilelist{display:grid;gap:8px}
+.pbtn{display:flex;justify-content:space-between;align-items:center;gap:10px;border:2px solid var(--line);background:var(--surface2);border-radius:12px;padding:12px 14px;text-align:left}
+.pbtn:hover{border-color:var(--teal)}
+footer{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;padding-top:8px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="app" aria-live="polite"></div>
+
+<script>
+const UNITS = [
+{id:1, name:"Unit 1", title:"In New York City", data:`
+#Hi from America!
+America|Amerika|Many people dream of a holiday in ___.|America
+star|Stern; Star|At night you can see a bright ___ in the sky.|star
+population|Bevölkerung, Einwohnerzahl|The ___ of New York is more than eight million.|population
+multicultural|multikulturell|People from many cultures live in London. It is a ___ city.|multicultural
+ocean|Ozean|The Atlantic ___ is between Europe and America.|ocean
+Caribbean|karibisch; Karibik|Jamaica is an island in the ___ Sea.|Caribbean
+climate|Klima|Spain has a warm ___.|climate
+everyday|alltäglich, Alltags-|Phones are part of our ___ life.|everyday
+awesome|klasse, großartig|The concert was ___! I loved it.|awesome
+#A BIG American quiz
+euro|Euro|This T-shirt costs ten ___.|euros
+symbol (of)|Symbol (für)|A heart is a ___ of love.|symbol
+statue|Statue|The ___ of Liberty is in New York.|statue
+liberty|Freiheit|The Statue of ___ stands for freedom.|liberty
+official language|Amtssprache|English is the ___ of Australia.|official language
+indigenous|einheimisch|The ___ people lived in America before the Europeans came.|indigenous
+#Einstieg
+square|Platz (in der Stadt)|Let's meet in the market ___ at three.|square
+huge|riesig, Riesen-|An elephant is a ___ animal.|huge
+subway|U-Bahn|In New York many people take the ___ to work.|subway
+homeless|obdachlos|The ___ man had nowhere to sleep.|homeless
+immigrant|Einwanderer, Einwanderin|My grandmother came to Germany as an ___.|immigrant
+#Theme 1
+ready|bereit, fertig|Are you ___? The bus is here.|ready
+nose|Nase|I have a cold and my ___ is red.|nose
+(to) pass|vorbeigehen an, vorbeifahren an|I ___ the bakery on my way to school.|pass
+as often as|so oft wie|I don't play football ___ my brother.|as often as
+(to) bet|wetten|I ___ you can't run faster than me!|bet
+skyscraper|Wolkenkratzer|A ___ is a very tall building.|skyscraper
+quite|ziemlich|The test was ___ easy.|quite
+(to) build|(er)bauen|They want to ___ a new school here.|build
+across the bridge|über die Brücke|We walked ___ to the other side of the river.|across the bridge
+above|oben; über, oberhalb (von)|There is a lamp ___ the table.|above
+traffic|(Straßen-)Verkehr|There is a lot of ___ in the city in the morning.|traffic
+#Theme 2
+mood|Stimmung, Laune|I'm in a good ___ today.|mood
+stoop|kleine Terrasse vor der Tür|We sat on the ___ in front of our house.|stoop
+opinion|Meinung|In my ___, this film is boring.|opinion
+(to) look forward to|sich freuen auf|I ___ the summer holidays.|look forward to
+#Story
+(to) matter|wichtig sein|It doesn't ___ who wins.|matter
+friendship|Freundschaft|Our ___ is very important to me.|friendship
+(to) practise|üben|You must ___ every day if you want to play the guitar well.|practise
+nearly|fast, beinahe|Hurry up! It's ___ eight o'clock.|nearly
+(to) fall asleep|einschlafen|Sometimes I ___ in front of the TV.|fall asleep
+nowhere|nirgendwo(hin)|I looked everywhere, but my keys were ___.|nowhere
+routine|Routine|Getting up at seven is part of my morning ___.|routine
+(to) be bored|Langeweile haben, gelangweilt sein|There is nothing to do. I'm so ___!|bored
+chance|Chance, Gelegenheit|This is your ___ to win a prize.|chance
+face|Gesicht|Wash your ___ and brush your teeth.|face
+(to) hit|schlagen; treffen|Don't ___ your little brother!|hit
+floor|(Fuß-)Boden|Don't put your bag on the ___.|floor
+coach|Trainer/in|Our football ___ is very strict.|coach
+both|beide|I like ___ cats and dogs.|both
+gym|Turnhalle, Sporthalle; Fitnessstudio|We have PE in the ___.|gym
+distance|Distanz, Entfernung|In the ___ you can see the mountains.|distance
+(to) grow|wachsen; werden|Plants need water to ___.|grow
+summary|Zusammenfassung|Write a short ___ of the story.|summary
+fight|Kampf; Schlägerei|There was a ___ in the schoolyard.|fight
+impolite|unhöflich|It's ___ to talk with your mouth full.|impolite
+#Focus on language
+part-time job|Teilzeitjob|My mum has a ___ in a shop.|part-time job
+letter|Buchstabe; Brief|The word "cat" has three ___.|letters
+receptionist|Empfangsmitarbeiter/in|The ___ at the hotel gave us the key.|receptionist
+mechanic|Mechaniker/in|The ___ repaired our car.|mechanic
+remote control|Fernbedienung|Where is the ___? I want to watch TV.|remote control
+metal|Metall|This spoon is made of ___.|metal
+cook|Koch, Köchin|My uncle works as a ___ in a restaurant.|cook
+sweet|süß|This cake is very ___.|sweet
+fork|Gabel|You eat with a knife and a ___.|fork
+#Skills training
+sight|Sehenswürdigkeit|The Eiffel Tower is a famous ___ in Paris.|sight
+the Olympics|die Olympischen Spiele|Athletes from all over the world take part in the ___.|Olympics
+(to) guess|(er)raten|Can you ___ how old I am?|guess
+kayak|Kajak|We paddled down the river in a ___.|kayak
+wide|breit, weit|The river is very ___ here.|wide
+voluntary|freiwillig, ehrenamtlich|This homework is ___. You don't have to do it.|voluntary
+(to) hang out|rumhängen, abhängen|On Saturdays I ___ with my friends.|hang out
+piece (of)|Stück|Can I have a ___ of cake, please?|piece
+(to) fry|(in der Pfanne) braten|___ the onions in a pan.|fry
+oil|Öl|Put some ___ in the pan.|oil
+cherry|Kirsche|A ___ is a small red fruit.|cherry
+pie|Obsttörtchen; Pastete|My grandma makes the best apple ___.|pie
+egg|Ei|I had an ___ for breakfast.|egg
+dessert|Nachtisch, Dessert|We had ice cream for ___.|dessert
+fizzy|mit Kohlensäure|I don't like ___ drinks.|fizzy
+pasta|Pasta; Nudeln|Spaghetti is a kind of ___.|pasta
+as a snack|als Snack|I often eat an apple ___.|as a snack
+`},
+{id:2, name:"Unit 2", title:"Two states, two families", data:`
+#Einstieg
+wildlife|Tiere (in freier Wildbahn), Tierwelt|Africa is famous for its ___.|wildlife
+cousin|Cousin, Cousine|My aunt's son is my ___.|cousin
+foreground|Vordergrund|In the ___ of the photo you can see a boat.|foreground
+background|Hintergrund|In the ___ of the photo there are mountains.|background
+modern|modern|Our school has a ___ computer room.|modern
+snow|Schnee|In winter there is a lot of ___ in the mountains.|snow
+palm tree|Palme|We lay on the beach under a ___.|palm tree
+theme park|Themenpark|We went on lots of rides at the ___.|theme park
+whale|Wal|A ___ is a huge sea animal.|whale
+snorkelling|Schnorcheln|We saw beautiful fish when we went ___.|snorkelling
+space|Weltraum; Platz|Astronauts travel into ___.|space
+flight|Flug|Our ___ to New York takes eight hours.|flight
+#Theme 1
+opening times|Öffnungszeiten|What are the ___ of the museum?|opening times
+advantage|Vorteil|One ___ of the city is the good public transport.|advantage
+(to) attack|angreifen, attackieren|The dog didn't ___ anyone.|attack
+dry|trocken|In July the weather was hot and ___.|dry
+root|Wurzel|This old tree has very deep ___.|roots
+#Theme 2
+(to) take place|stattfinden|The concert will ___ in the park.|take place
+(to) go on for|(an)dauern|The party will ___ six hours.|go on for
+ride|Ritt; Fahrt; Fahrgeschäft|The roller coaster is my favourite ___.|ride
+fair|Jahrmarkt; Messe|We won a teddy bear at the ___.|fair
+sled|Schlitten|The children went down the hill on a ___.|sled
+race|(Wett-)Rennen|Who won the ___?|race
+crowd|(Menschen-)Menge|A big ___ was waiting outside the stadium.|crowd
+vegan|vegan; Veganer/in|She doesn't eat meat, eggs or milk. She's ___.|vegan
+(to) smell|riechen, duften|These flowers ___ wonderful.|smell
+tip|Tipp|Can you give me a ___ for the test?|tip
+atmosphere|Atmosphäre|The ___ at the concert was great.|atmosphere
+dialogue|Dialog|Read the ___ with a partner.|dialogue
+#Story
+calm|ruhig, still|Stay ___ and don't panic.|calm
+way|Art (und Weise); Weg|Do it this ___. It's easier.|way
+for once|ausnahmsweise, dieses eine Mal|___ my brother was on time.|for once
+hall|Halle; Saal|The concert ___ was full.|hall
+wedding|Hochzeit|My cousin wore a white dress at her ___.|wedding
+(to) marry|heiraten|They want to ___ next summer.|marry
+embarrassing|peinlich|I fell over in front of the class. It was so ___!|embarrassing
+traditional|traditionell|Pizza is a ___ Italian dish.|traditional
+(to) yell (at)|(jemanden an)schreien|Please don't ___ at me!|yell
+origin|Ursprung, Herkunft|My friend's family is of Turkish ___.|origin
+(to) hold|halten|Can you ___ my bag for a minute?|hold
+I don't mind.|Es macht mir nichts aus. / Es ist mir egal.|Pizza or pasta? – I don't ___. Both are fine.|mind
+if|ob|I don't know ___ I can come to your party.|if
+(to) laugh at|lachen über, sich lustig machen über|Please don't ___ me!|laugh at
+(to) spend|ausgeben; verbringen|I ___ a lot of time with my friends.|spend
+I suppose|glaube ich, denke ich|It will rain tomorrow, I ___.|suppose
+(to) grill|grillen|Let's ___ some sausages in the garden.|grill
+pork|Schweinefleisch|Grilled ___ is my dad's favourite meat.|pork
+onion|Zwiebel|Cutting an ___ makes me cry.|onion
+bean|Bohne|Coffee is made from ___.|beans
+#Focus on language
+straight|direkt, gleich; gerade|After school I went ___ home.|straight
+journey|Reise|Have a safe ___!|journey
+(to) explore|erforschen, erkunden|We want to ___ the old town.|explore
+rocket|Rakete|The ___ flew into space.|rocket
+launch|Start (z. B. einer Rakete)|Thousands of people watched the rocket ___.|launch
+lazy|faul|Don't be so ___! Help me clean the kitchen.|lazy
+viewing area|Aussichtsbereich|From the ___ you can see the whole city.|viewing area
+(to) lift|heben, hochheben|This box is too heavy. I can't ___ it.|lift
+church|Kirche|The ___ bells ring every Sunday.|church
+#Skills training
+departure|Abfahrt, Abreise; Abflug|The ___ of our flight is at 10 am.|departure
+officer|Beamter/Beamtin|A police ___ helped us.|officer
+arrival|Ankunft|The ___ of the train is at 5 pm.|arrival
+May I ...?|Darf ich ...?|___ I open the window, please?|may
+boarding pass|Bordkarte|Show your ___ before you get on the plane.|boarding pass
+liquid|Flüssigkeit; flüssig|Water and juice are ___.|liquids
+passenger|Passagier/in, Fahrgast|The bus has fifty ___.|passengers
+one way|eine Strecke (ohne Rückfahrt)|A ___ ticket, please. I'm not coming back.|one-way
+instruction|Anweisung|Read the ___ carefully.|instructions
+machine|Maschine, Gerät, Automat|You can buy tickets at the ticket ___.|machine
+(to) press|drücken|___ the green button to start.|press
+(to) go wrong|schiefgehen|Don't worry. Nothing can ___.|go wrong
+environment|Umwelt; Umgebung|Cycling is good for the ___.|environment
+(to) get wet|nass werden|Take an umbrella or you will ___.|get wet
+public transport|öffentlicher Personenverkehr|I go to school by ___.|public transport
+service|(Zug-)Verbindung; Service|There is a good bus ___ to the city centre.|service
+out of this world|fabelhaft|These cupcakes are out of this ___!|world
+(to) take care|vorsichtig sein, aufpassen|Bye! ___!|take care
+(to) ask for|um etwas bitten|Let's ___ help.|ask for
+`},
+{id:3, name:"Unit 3", title:"A new start", data:`
+#Canada – not just colder. Cooler.
+average|durchschnittlich; Durchschnitt|On ___ I sleep eight hours a night.|average
+reason|Grund, Begründung|What's the ___ for your bad mood?|reason
+head of state|Staatsoberhaupt|In Britain the king is the ___.|head of state
+square kilometre|Quadratkilometer|The lake is ten ___ big.|square kilometres
+all over the world|überall auf der Welt|People ___ love music.|all over the world
+(to) colonize|kolonisieren|In the past, Britain wanted to ___ many countries.|colonize
+century|Jahrhundert|A ___ is one hundred years.|century
+inhabitant|Einwohner/in, Bewohner/in|The town has 5,000 ___.|inhabitants
+#Einstieg
+not ... any more|nicht mehr|My grandpa is ___ working any more.|not
+#Theme 1
+social media|soziale Medien|Many teenagers use ___ every day.|social media
+store|Geschäft|I bought new shoes at a ___ in town.|store
+spice|Gewürz|Pepper is a ___.|spice
+(to) repair|reparieren|Can you ___ my bike?|repair
+(to) walk a dog|mit einem Hund spazieren gehen|Every afternoon I ___ my neighbour's dog.|walk
+#Theme 2
+apprenticeship|Ausbildung, Lehre|My brother is doing an ___ as a cook.|apprenticeship
+care worker|Pflegekraft; Betreuer/in|A ___ helps old people.|care worker
+(to) paint|malen|I like to ___ pictures of animals.|paint
+electrician|Elektriker/in|The light doesn't work. We need an ___.|electrician
+(to) train as|eine Ausbildung machen als|I want to ___ a mechanic.|train as
+programmer|Programmierer/in|A ___ writes computer programs.|programmer
+(to) apply for|sich bewerben um|I want to ___ this job.|apply for
+company|Gesellschaft, Firma|My dad works for a big ___.|company
+abroad|im/ins Ausland|Next year I want to work ___.|abroad
+(to) depend on|abhängen von|Do we go swimming? It ___ the weather.|depends on
+industry|Industrie|The car ___ is important in Germany.|industry
+(to) earn|verdienen (Geld)|How much money do you ___ in your job?|earn
+confident|selbstsicher; zuversichtlich|I'm ___ that I will pass the test.|confident
+youth camp|Jugendlager|In the summer we went to a ___ by a lake.|youth camp
+cashier|Kassierer/in|The ___ at the supermarket was very friendly.|cashier
+#Story
+guy|Typ, Kerl|He's a really nice ___.|guy
+(to) whisper|flüstern|Please ___. The baby is sleeping.|whisper
+(to) ruin|ruinieren, verderben|Don't ___ the surprise!|ruin
+corridor|Korridor, Flur|Don't run in the ___!|corridor
+(to) turn around|sich umdrehen|I heard a noise behind me and ___.|turned around
+front|Vorderseite, vorderer Teil|Please come to the ___ of the classroom.|front
+everything|alles|I have ___ I need.|everything
+(to) believe in|glauben an|Do you ___ ghosts?|believe in
+(to) boo|buhen|The fans started to ___ when their team lost.|boo
+(to) clap|klatschen|At the end of the show everybody started to ___.|clap
+typical (of)|typisch (für)|That's ___ of him! He's always late.|typical
+legend|Legende, Sage|There is an old ___ about a dragon.|legend
+(to) kiss|(sich) küssen|The prince wanted to ___ the princess.|kiss
+#Focus on language
+challenge|Herausforderung|Learning a new language is a big ___.|challenge
+cafeteria|Kantine, Cafeteria|We eat lunch in the school ___.|cafeteria
+outdoor|Outdoor-, Natursport-|Hiking is my favourite ___ activity.|outdoor
+survival|Überleben|Water is important for ___.|survival
+plant|Pflanze|Don't forget to water the ___.|plants
+cup|Tasse; Becher|Would you like a ___ of tea?|cup
+(to) introduce|vorstellen, bekanntmachen|Let me ___ myself. I'm Tom.|introduce
+raft|Floß|We built a ___ from wood and crossed the river.|raft
+(to) hurt|verletzen; wehtun|My leg ___ after the match.|hurts
+(to) enjoy yourself|Spaß haben|Have a great party and ___ yourself!|enjoy
+(to) be able to|etwas tun können|I won't be ___ to come tomorrow.|able
+#Skills training
+CV|Lebenslauf|Send your ___ and a cover letter to the company.|CV
+experience|Erfahrung; Erlebnis|Do you have any ___ with children?|experience
+candidate|Bewerber/in, Kandidat/in|There are five ___ for the job.|candidates
+(to) serve|servieren; bedienen|The waiter will ___ the food.|serve
+during|während (vor Nomen)|Please be quiet ___ the lesson.|during
+honest|ehrlich|Please be ___. Did you eat my chocolate?|honest
+reliable|zuverlässig, verlässlich|She always does what she says. She's very ___.|reliable
+personal statement|Selbstbeschreibung|In your ___ you write about yourself.|personal statement
+key skills|Schlüsselqualifikationen|Teamwork is one of the ___ for this job.|key skills
+education|(Schul-)Bildung|A good ___ helps you to get a good job.|education
+reference|Referenz, Empfehlung|My old boss can give me a ___.|reference
+cover letter|Anschreiben, Bewerbungsschreiben|Write a ___ when you apply for a job.|cover letter
+advertisement|Anzeige, Inserat; Werbespot|I saw an ___ for the job in the newspaper.|advertisement
+suitable (for)|geeignet, passend (für)|These shoes are not ___ for hiking.|suitable
+(to) be available|zur Verfügung stehen, Zeit haben|I'm ___ on Monday. Let's meet then.|available
+as from|ab ..., von ... an|The new rules start ___ May.|as from
+(to) attach (to)|anhängen (an)|Please ___ your CV to the email.|attach
+job interview|Vorstellungsgespräch|I'm nervous about my ___ tomorrow.|job interview
+positive|positiv|Try to stay ___!|positive
+(to) be made of|bestehen aus, aus etwas sein|This table is ___ wood.|made of
+cereal|Getreide; Frühstücksflocken|I eat ___ with milk for breakfast.|cereal
+`},
+{id:4, name:"Unit 4", title:"The Caribbean", data:`
+#Islands in the sun
+pirate|Pirat/in|The ___ had a big ship and a parrot.|pirate
+hurricane|Hurrikan, Orkan|The ___ destroyed many houses.|hurricane
+season|Jahreszeit; Saison|Summer is my favourite ___.|season
+colony|Kolonie|Jamaica was a British ___.|colony
+slave|Sklave, Sklavin|The ___ had to work very hard and got no money.|slaves
+(to) treat|behandeln|Don't ___ me like a baby!|treat
+revolt|Aufstand, Revolte|The slaves started a ___ against the farmers.|revolt
+(to) fight|kämpfen|The two dogs started to ___.|fight
+colonialist|Kolonialist/in|The ___ took the land from the people.|colonialists
+(to) burn|brennen; verbrennen|Careful! Don't ___ your hand on the oven!|burn
+descendant|Nachfahre, Nachkomme|She is a ___ of a famous king.|descendant
+independent (of)|unabhängig (von)|Jamaica became ___ in 1962.|independent
+#Einstieg
+storm|Sturm; Gewitter|There was a big ___ last night with lots of rain.|storm
+(to) produce|produzieren|This factory ___ cars.|produces
+athlete|(Leicht-)Athlet/in|Usain Bolt is a famous ___.|athlete
+jump|Sprung|The high ___ is my favourite sport.|jump
+sportsperson|Sportler/in|Who is your favourite ___?|sportsperson
+#Theme 1
+Christian|Christ/in; christlich|___ celebrate Christmas.|Christians
+Muslim|Muslim/Muslima; muslimisch|___ pray in a mosque.|Muslims
+religion|Religion|Christianity is a ___.|religion
+carnival|Karneval|At ___ I want to dress up as a pirate.|carnival
+Easter|Ostern|At ___ children look for eggs.|Easter
+hero|Held/in|The firefighter saved the child. He's a real ___.|hero
+container|Behälter, Gefäß|Put the food in a plastic ___.|container
+classical|klassisch|My grandpa likes ___ music.|classical
+exotic|exotisch|Mangoes and pineapples are ___ fruits.|exotic
+till|bis (zeitlich)|The shop is open ___ 8 pm.|till
+mosque|Moschee|Muslims pray in a ___.|mosque
+member|Mitglied|I'm a ___ of the school football team.|member
+possible|möglich|Is it ___ to swim in this lake?|possible
+#Theme 2
+peace|Frieden|Everybody wants ___ in the world.|peace
+catchy|eingängig|This song is so ___. I can't stop singing it.|catchy
+although|obwohl|We went out ___ it was raining.|although
+lyrics|Liedtext|I know all the ___ of this song.|lyrics
+danger|Gefahr|Stop! There's ___ ahead!|danger
+illness|Krankheit|Flu is an ___.|illness
+cancer|Krebs (Erkrankung)|Smoking can cause ___.|cancer
+(to) shoot|(er)schießen|The player wanted to ___ the ball into the goal.|shoot
+wife|(Ehe-)Frau|Mr Smith and his ___ have two children.|wife
+(to) hope (for)|hoffen (auf)|I ___ you feel better soon.|hope
+(to) form|(sich) formen, (sich) bilden|Let's ___ a band!|form
+top of the charts|Platz eins der Charts|Her new song is at the ___.|top of the charts
+luckily|glücklicherweise|I missed the bus, but ___ my mum drove me to school.|luckily
+foot|Fuß|I hurt my ___ when I played football.|foot
+(to) continue|fortfahren, weitermachen|Let's stop now and ___ tomorrow.|continue
+political|politisch|They had a long ___ discussion.|political
+medal|Medaille|She won a gold ___ at the Olympics.|medal
+record|Schallplatte|My dad still listens to old ___.|records
+#Story
+(to) destroy|zerstören, vernichten|The fire ___ the house.|destroyed
+towards|nach, auf ... zu, in Richtung|The dog ran ___ me.|towards
+in time|rechtzeitig|We got to the station just ___.|in time
+uncle|Onkel|My mother's brother is my ___.|uncle
+shelter|Schutzraum, Unterstand|We waited in the bus ___ because it was raining.|shelter
+(to) be frightened|Angst haben|My little sister is ___ of spiders.|frightened
+(to) be gone|weg sein|Where's my bike? It was here, and now it's ___!|gone
+roof|Dach|There's a cat on the ___ of our house.|roof
+(to) fall|fallen|Be careful! Don't ___!|fall
+(to) lie|liegen|The cat likes to ___ on my bed.|lie
+electricity|Strom, Elektrizität|This car runs on ___.|electricity
+helicopter|Hubschrauber|The ___ landed on the roof of the hospital.|helicopter
+(to) rebuild|wiederaufbauen|After the storm they had to ___ their house.|rebuild
+refugee|Flüchtling|She came to Germany as a ___.|refugee
+(to) organize|organisieren|Who will ___ the class party?|organize
+(to) come true|wahr werden, Wirklichkeit werden|I hope my dream will ___.|come true
+#Focus on language
+since|seit (Zeitpunkt)|I have lived here ___ 2015.|since
+primary school|Grundschule|Children go to ___ when they are six.|primary school
+silver|Silber|She has a ___ ring.|silver
+#Skills training
+melody|Melodie|I like the ___ of this song.|melody
+recipe|(Koch-)Rezept|Can you give me the ___ for this cake?|recipe
+pineapple|Ananas|A ___ is a big yellow fruit.|pineapple
+(to) check in|einchecken|We have to ___ at the airport two hours before the flight.|check in
+passport|(Reise-)Pass|You need a ___ to travel to the USA.|passport
+(to) sign|unterschreiben|Please ___ your name here.|sign
+document|Dokument; Text(datei)|Save the ___ on your computer.|document
+while|während (vor Nebensatz)|The phone rang ___ I was in the shower.|while
+`}];
+
+const VERB_DATA = `
+be|was/were|been|sein
+become|became|become|werden
+begin|began|begun|beginnen
+break|broke|broken|brechen
+bring|brought|brought|bringen
+build|built|built|bauen
+buy|bought|bought|kaufen
+catch|caught|caught|fangen
+choose|chose|chosen|wählen
+come|came|come|kommen
+cost|cost|cost|kosten
+cut|cut|cut|schneiden
+do|did|done|tun, machen
+drink|drank|drunk|trinken
+drive|drove|driven|fahren
+eat|ate|eaten|essen
+fall|fell|fallen|fallen
+feel|felt|felt|fühlen
+find|found|found|finden
+fly|flew|flown|fliegen
+forget|forgot|forgotten|vergessen
+get|got|got|bekommen
+give|gave|given|geben
+go|went|gone|gehen
+grow|grew|grown|wachsen
+have|had|had|haben
+hear|heard|heard|hören
+hit|hit|hit|schlagen
+hold|held|held|halten
+keep|kept|kept|behalten
+know|knew|known|wissen, kennen
+leave|left|left|verlassen
+lose|lost|lost|verlieren
+make|made|made|machen
+meet|met|met|treffen
+pay|paid|paid|bezahlen
+put|put|put|legen, stellen
+read|read|read|lesen
+ride|rode|ridden|reiten, fahren
+run|ran|run|rennen
+say|said|said|sagen
+see|saw|seen|sehen
+sell|sold|sold|verkaufen
+send|sent|sent|schicken
+sing|sang|sung|singen
+sit|sat|sat|sitzen
+sleep|slept|slept|schlafen
+speak|spoke|spoken|sprechen
+spend|spent|spent|ausgeben, verbringen
+stand|stood|stood|stehen
+swim|swam|swum|schwimmen
+take|took|taken|nehmen
+teach|taught|taught|unterrichten
+tell|told|told|erzählen
+think|thought|thought|denken
+understand|understood|understood|verstehen
+wake|woke|woken|aufwachen
+wear|wore|worn|tragen (Kleidung)
+win|won|won|gewinnen
+write|wrote|written|schreiben
+bet|bet|bet|wetten
+show|showed|shown|zeigen
+hang|hung|hung|hängen
+hurt|hurt|hurt|verletzen, wehtun
+fight|fought|fought|kämpfen
+lie|lay|lain|liegen
+rebuild|rebuilt|rebuilt|wiederaufbauen
+shoot|shot|shot|schießen
+`;
+
+</script>
+<script>
+"use strict";
+// ---------- Daten aufbereiten ----------
+const UNIT_COLOR = {1:"var(--u1)",2:"var(--u2)",3:"var(--u3)",4:"var(--u4)",v:"var(--uv)"};
+const ITEMS = [], BYUNIT = {};
+UNITS.forEach(u => {
+  BYUNIT[u.id] = []; u.secs = []; let i = 0;
+  u.data.trim().split("\n").forEach(line => {
+    if (line.startsWith("#")) { u.secs.push({name:line.slice(1).trim(), items:[]}); return; }
+    if (!u.secs.length) u.secs.push({name:"Wörter", items:[]});
+    const [en, de, s, a] = line.split("|");
+    const it = {id:"u"+u.id+"-"+i, unit:u.id, sec:u.secs.length-1, en, de, s, a, kind:"w"};
+    i++; ITEMS.push(it); BYUNIT[u.id].push(it); u.secs[u.secs.length-1].items.push(it);
+  });
+});
+const VERBS = VERB_DATA.trim().split("\n").map(l => {
+  const [inf, past, pp, de] = l.split("|");
+  return {id:"v-"+inf, inf, past, pp, de, kind:"v"};
+});
+const BYID = {}; ITEMS.concat(VERBS).forEach(x => BYID[x.id] = x);
+
+// ---------- Hilfsfunktionen ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const today = () => { const d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+const fmtDate = s => { if (!s) return "–"; const [y,m,d] = s.split("-"); return d+"."+m+"."+y; };
+function norm(s){
+  return String(s).toLowerCase().replace(/[’‘`´]/g,"'").replace(/\(.*?\)/g," ").replace(/\.\.\.|…/g," ")
+    .replace(/[.,!?;:"\/]/g," ").replace(/-/g," ").replace(/\s+/g," ").trim().replace(/^to /,"").replace(/^the /,"");
+}
+function lev(a,b){
+  const m=a.length,n=b.length; if(Math.abs(m-n)>1) return 2;
+  const d=Array.from({length:m+1},(_,i)=>[i]); for(let j=1;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return d[m][n];
+}
+// Rückgabe: "ok", "close" (ein Tippfehler) oder "bad"
+function checkTyped(input, variants){
+  const x = norm(input); if (!x) return "bad";
+  if (variants.some(v => v === x)) return "ok";
+  if (variants.some(v => v.length >= 5 && lev(v, x) === 1)) return "close";
+  return "bad";
+}
+const cleanEn = en => en.replace(/^\(to\)\s*/,"");
+function wordVariants(it){
+  const set = new Set();
+  const add = en => en.split("/").forEach(p => { const n = norm(p); if (n) set.add(n); });
+  add(it.en);
+  const dn = norm(it.de);
+  ITEMS.forEach(o => { if (o !== it && norm(o.de) === dn) add(o.en); });
+  return [...set];
+}
+const formVariants = f => f.split("/").map(norm).concat(f.includes("/") ? [norm(f.replace("/"," "))] : []);
+function letterHint(en){
+  const base = cleanEn(en).replace(/\s*\(.*?\)/g,"").replace(/\.\.\./g,"").replace(/[?!.]/g,"").trim();
+  return base.split(/\s+/).map(w => w[0] + w.slice(1).replace(/[A-Za-z]/g,"_")).join("   ");
+}
+const filled = it => esc(it.s).replace("___", "<b>"+esc(it.a)+"</b>");
+
+let canSpeak = false;
+try { canSpeak = "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined"; } catch(e) {}
+function say(t){ try { const u = new SpeechSynthesisUtterance(t); u.lang = "en-GB"; u.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch(e) {} }
+const speakBtn = t => canSpeak ? `<button class="speak" data-say="${esc(t)}" aria-label="Anhören"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>` : "";
+
+// ---------- Speicher ----------
+const LS_KEY = "vocab-quest-8";
+let store = {profiles:{}, current:null};
+let storageOK = true;
+function load(){
+  try { const raw = localStorage.getItem(LS_KEY); if (raw) store = JSON.parse(raw); localStorage.setItem(LS_KEY+"-t","1"); }
+  catch(e) { storageOK = false; }
+  if (!store || typeof store !== "object") store = {profiles:{}, current:null};
+  if (!store.profiles) store.profiles = {};
+}
+function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch(e) { storageOK = false; } }
+const P = () => store.profiles[store.current];
+const newProfile = name => ({name, xp:0, ans:0, cor:0, rounds:0, days:[], box:{}, badges:[], created:today()});
+
+function streak(p){
+  if (!p.days.length) return 0;
+  const set = new Set(p.days); let n = 0; const d = new Date();
+  const key = x => x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
+  if (!set.has(key(d))) d.setDate(d.getDate()-1);
+  while (set.has(key(d))) { n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+const isSafe = (p, id) => (p.box[id] ?? -1) >= 3;
+function unitStats(p, list){ let seen=0, safe=0; list.forEach(it => { if (p.box[it.id] !== undefined) seen++; if (isSafe(p, it.id)) safe++; }); return {seen, safe, total:list.length}; }
+
+// ---------- Fortschrittscode ----------
+function hash(s){ let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return (h % 1679616).toString(36).padStart(4,"0"); }
+function boxString(p, list){ return list.map(it => p.box[it.id] === undefined ? "-" : String(p.box[it.id])).join(""); }
+function encodeProfile(p){
+  const b = {}; UNITS.forEach(u => b[u.id] = boxString(p, BYUNIT[u.id])); b.v = boxString(p, VERBS);
+  const o = {v:1, n:p.name, x:p.xp, a:p.ans, c:p.cor, r:p.rounds, d:today(), dy:p.days.slice(-40), bd:p.badges, b};
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+  return "VQ1." + b64 + "." + hash(b64);
+}
+function decodeCode(code){
+  const m = String(code).trim().match(/^VQ1\.([A-Za-z0-9+/=]+)\.([a-z0-9]{4})$/);
+  if (!m) return null;
+  if (hash(m[1]) !== m[2]) return null;
+  try { const o = JSON.parse(decodeURIComponent(escape(atob(m[1])))); return o && o.v === 1 ? o : null; } catch(e) { return null; }
+}
+function profileFromCode(o){
+  const p = newProfile(String(o.n || "Ohne Name").slice(0, 24));
+  p.xp = o.x|0; p.ans = o.a|0; p.cor = o.c|0; p.rounds = o.r|0; p.days = Array.isArray(o.dy) ? o.dy : []; p.badges = Array.isArray(o.bd) ? o.bd : [];
+  const apply = (str, list) => { if (typeof str !== "string") return; list.forEach((it, i) => { const ch = str[i]; if (ch && ch !== "-") p.box[it.id] = Math.min(5, +ch || 0); }); };
+  UNITS.forEach(u => apply(o.b && o.b[u.id], BYUNIT[u.id])); apply(o.b && o.b.v, VERBS);
+  return p;
+}
+
+// ---------- Abzeichen ----------
+const BADGES = [
+  {id:"first", name:"Erste Runde", test:p => p.rounds >= 1},
+  {id:"r10", name:"10 Runden", test:p => p.rounds >= 10},
+  {id:"perfect", name:"Fehlerfreie Runde", test:(p,r) => r && r.perfect},
+  {id:"streak3", name:"3 Tage in Folge", test:p => streak(p) >= 3},
+  {id:"xp1000", name:"1000 XP", test:p => p.xp >= 1000},
+  {id:"verbs30", name:"30 Verben sicher", test:p => unitStats(p, VERBS).safe >= 30},
+  ...UNITS.map(u => ({id:"u"+u.id, name:u.name+" zu 80 % sicher", test:p => { const s = unitStats(p, BYUNIT[u.id]); return s.safe >= s.total * .8; }}))
+];
+const medal = on => `<svg width="16" height="16" viewBox="0 0 24 24" fill="${on ? "var(--accent)" : "none"}" stroke="currentColor" stroke-width="2"><circle cx="12" cy="14" r="6"/><path d="M8 3h8l-2 5h-4z"/></svg>`;
+
+// ---------- Auswahl (Karteikasten) ----------
+function weight(id, mix){ const b = P().box[id]; if (b === undefined) return mix ? 1.5 : 4; return [7,5,3,1.2,.6,.3][b]; }
+function pickWeighted(pool, n, used, mix, filter){
+  const out = []; let cand = pool.filter(x => !used.has(x.id) && (!filter || filter(x)));
+  if (cand.length < n) cand = pool.filter(x => !filter || filter(x));
+  while (out.length < n && cand.length){
+    const tot = cand.reduce((s, x) => s + weight(x.id, mix), 0); let r = Math.random() * tot; let k = 0;
+    for (; k < cand.length - 1; k++){ r -= weight(cand[k].id, mix); if (r <= 0) break; }
+    const x = cand[k]; out.push(x); used.add(x.id); cand.splice(k, 1);
+  }
+  return out;
+}
+function distractors(it, pool, field, n){
+  const seen = new Set([norm(it[field])]); const out = [];
+  for (const o of shuffle(pool)) { const k = norm(o[field]); if (!seen.has(k)) { seen.add(k); out.push(o); } if (out.length >= n) break; }
+  return out;
+}
+function regular(inf){ if (inf.length < 3) return null; if (/e$/.test(inf)) return inf + "d"; if (/[^aeiou]y$/.test(inf)) return inf.slice(0,-1) + "ied"; return inf + "ed"; }
+function verbOptions(v, form){
+  const correct = v[form]; const bad = new Set(formVariants(correct));
+  const opts = []; const push = s => { if (s && !bad.has(norm(s)) && !opts.some(o => norm(o) === norm(s))) opts.push(s); };
+  push(v.inf); push(form === "past" ? v.pp : v.past); push(regular(v.inf));
+  for (const o of shuffle(VERBS)) { if (opts.length >= 3) break; push(o[form]); }
+  return shuffle([correct, ...opts.slice(0,3)]);
+}
+
+// ---------- Runde zusammenstellen ----------
+function unlockedItems(){
+  const p = P(); const out = [];
+  UNITS.forEach(u => u.secs.forEach(s => { if (s.items.some(it => p.box[it.id] !== undefined)) out.push(...s.items); }));
+  return out.length >= 8 ? out : BYUNIT[UNITS[0].id];
+}
+let round = null;
+function buildRound(mode){
+  const used = new Set(); const mix = mode.kind === "mix";
+  let pool = [], dpool = [];
+  if (mix) { pool = unlockedItems(); dpool = pool.length >= 12 ? pool : ITEMS; }
+  else if (mode.kind === "unit") {
+    const u = UNITS.find(x => x.id === mode.unit); dpool = BYUNIT[u.id];
+    if (mode.sec === undefined) pool = BYUNIT[u.id];
+    else {
+      pool = u.secs[mode.sec].items.slice();
+      for (let k = mode.sec - 1; k >= 0 && pool.length < 8; k--) pool = pool.concat(u.secs[k].items);
+      for (let k = mode.sec + 1; k < u.secs.length && pool.length < 8; k++) pool = pool.concat(u.secs[k].items);
+    }
+  }
+  const steps = [];
+  if (mode.kind === "verbs"){
+    const plan = shuffle(["vform","vform","vform","vmc","vmc","vmc","vthree","vthree"]).concat(["vmatch"]);
+    plan.forEach(t => {
+      if (t === "vmatch") { const vs = pickWeighted(VERBS, 5, new Set(), false); steps.push({t, items:vs}); return; }
+      const [v] = pickWeighted(VERBS, 1, used, false); if (!v) return;
+      const form = Math.random() < .5 ? "past" : "pp";
+      steps.push(t === "vmc" ? {t, item:v, form, options:verbOptions(v, form)} : {t, item:v, form});
+    });
+  } else {
+    const plan = shuffle(["mcEnDe","mcDeEn","type","vform","mcEnDe","type","vmc","mcDeEn","vthree"]);
+    plan.splice(4, 0, "match"); plan.push("gap");
+    plan.forEach(t => {
+      if (t === "match") { const its = pickWeighted(pool, 5, used, mix); steps.push({t, items:its}); return; }
+      if (t === "gap") {
+        const taken = new Set(); const its = pickWeighted(pool, 4, used, mix, x => { const k = norm(x.a); if (taken.has(k)) return false; return true; });
+        const uniq = []; its.forEach(x => { const k = norm(x.a); if (!taken.has(k)) { taken.add(k); uniq.push(x); } });
+        steps.push({t, items:uniq, bank:shuffle(uniq.map(x => x.a))}); return;
+      }
+      if (t[0] === "v") {
+        const [v] = pickWeighted(VERBS, 1, used, false); const form = Math.random() < .5 ? "past" : "pp";
+        steps.push(t === "vmc" ? {t, item:v, form, options:verbOptions(v, form)} : {t, item:v, form}); return;
+      }
+      const [it] = pickWeighted(pool, 1, used, mix); if (!it) return;
+      if (t === "mcEnDe") steps.push({t, item:it, options:shuffle([it, ...distractors(it, dpool, "de", 3)])});
+      else if (t === "mcDeEn") steps.push({t, item:it, options:shuffle([it, ...distractors(it, dpool, "en", 3)])});
+      else steps.push({t, item:it});
+    });
+  }
+  round = {mode, steps, i:0, points:0, max:0, misses:new Map(), answered:false, xp0:P().xp, newBadges:[]};
+}
+function record(it, ok){
+  const p = P(); const b = p.box[it.id];
+  p.box[it.id] = ok ? Math.min(5, (b === undefined ? 0 : b) + 1) : 0;
+  p.ans++; round.max++;
+  if (ok) { p.cor++; p.xp += 10; round.points++; } else round.misses.set(it.id, it);
+}
+
+// ---------- Bildschirme ----------
+let screen = "start";
+function render(){
+  const app = $("#app");
+  if (screen === "teacher") return app.innerHTML = teacherView();
+  if (!P() && screen !== "code-restore") screen = "start";
+  app.innerHTML = ({start:startView, home:homeView, unit:unitView, game:gameView, result:resultView, code:codeView, "code-restore":restoreView}[screen] || startView)();
+  const f = app.querySelector("[autofocus]"); if (f) f.focus();
+}
+const header = (right = "") => `<div class="topbar"><div class="brand"><span class="mark">VQ</span>Vocab Quest 8</div>${right}</div>`;
+const footer = () => `<footer><button class="link small" data-act="teacher">Für Lehrkräfte</button></footer>`;
+
+function startView(){
+  const names = Object.keys(store.profiles).sort((a,b) => a.localeCompare(b, "de"));
+  return `${header()}
+  <div class="card hero stack">
+    <h1>Vokabeln üben, bis sie sitzen</h1>
+    <p class="muted">Unit 1 bis 4, kleine Lückentexte und die unregelmäßigen Verben. Jede Runde ist neu gemischt. Wörter, die du noch nicht kannst, kommen öfter dran.</p>
+  </div>
+  ${storageOK ? "" : `<div class="notice">Auf diesem Gerät kann dein Fortschritt nicht gespeichert werden. Hol dir am Ende deinen Fortschrittscode, damit nichts verloren geht.</div>`}
+  ${names.length ? `<div class="card stack"><h2>Wer übt?</h2><div class="profilelist">${names.map(n => { const p = store.profiles[n]; return `<button class="pbtn" data-act="pick" data-name="${esc(n)}"><span><b>${esc(n)}</b></span><span class="muted small">${p.xp} XP</span></button>`; }).join("")}</div></div>` : ""}
+  <form class="card stack" id="newform">
+    <h2>${names.length ? "Neuer Name" : "Wie heißt du?"}</h2>
+    <p class="muted small">Dein Vorname oder ein Spitzname reicht. Du brauchst kein Passwort.</p>
+    <div class="row"><input class="field" id="newname" maxlength="24" placeholder="z. B. Lena" autocomplete="off" style="flex:1;min-width:0" ${names.length ? "" : "autofocus"}><button class="btn accent" type="submit">Los geht's</button></div>
+  </form>
+  <button class="btn ghost" data-act="restore">Ich habe schon einen Fortschrittscode</button>
+  ${footer()}`;
+}
+
+function homeView(){
+  const p = P(); const st = streak(p); const rate = p.ans ? Math.round(p.cor / p.ans * 100) : 0;
+  const vs = unitStats(p, VERBS);
+  const unitCards = UNITS.map(u => { const s = unitStats(p, BYUNIT[u.id]); const pct = Math.round(s.safe / s.total * 100);
+    return `<div class="card unit" style="--c:${UNIT_COLOR[u.id]}"><div class="unit-head"><div class="num">${u.id}</div><div><h3>${esc(u.name)}</h3><p class="muted small">${esc(u.title)}</p></div></div>
+      <div class="bar" role="img" aria-label="${pct} Prozent sicher"><i style="width:${pct}%"></i></div>
+      <div class="meta"><span>${s.safe} von ${s.total} sicher</span><span>${s.seen} geübt</span></div>
+      <button class="btn small" style="background:var(--c)" data-act="openunit" data-unit="${u.id}">Themes ansehen und üben</button></div>`; }).join("");
+  return `${header(`<button class="btn ghost small" data-act="switch">Name wechseln</button>`)}
+  <div class="stack"><h1>Hallo, ${esc(p.name)}!</h1>
+  <div class="chips"><span class="chip"><b>${p.xp}</b> XP</span><span class="chip"><b>${st}</b> ${st === 1 ? "Tag" : "Tage"} in Folge</span><span class="chip"><b>${rate} %</b> richtig</span><span class="chip"><b>${p.rounds}</b> Runden</span></div></div>
+  <div class="card hero stack"><h2>Gemischte Runde</h2><p class="muted">Wiederholt alle Themes, die du schon geübt hast, dazu ein Lückentext und unregelmäßige Verben.</p><div><button class="btn" data-act="play" data-mode="mix">Runde starten</button></div></div>
+  <div class="grid2">${unitCards}
+    <div class="card unit" style="--c:${UNIT_COLOR.v}"><div class="unit-head"><div class="num">V</div><div><h3>Unregelmäßige Verben</h3><p class="muted small">go – went – gone</p></div></div>
+      <div class="bar" role="img" aria-label="${Math.round(vs.safe/vs.total*100)} Prozent sicher"><i style="width:${Math.round(vs.safe/vs.total*100)}%"></i></div>
+      <div class="meta"><span>${vs.safe} von ${vs.total} sicher</span><span>${vs.seen} geübt</span></div>
+      <button class="btn small" style="background:var(--c);color:var(--accent-ink)" data-act="play" data-mode="verbs">Verben üben</button></div>
+  </div>
+  <div class="card stack"><h3>Abzeichen</h3><div class="badges">${BADGES.map(b => { const on = p.badges.includes(b.id); return `<span class="badge ${on ? "on" : ""}">${medal(on)}${esc(b.name)}</span>`; }).join("")}</div></div>
+  <div class="card stack"><h3>Mein Fortschrittscode</h3><p class="muted small">Mit dem Code sieht deine Lehrkraft deinen Stand. Du kannst damit auch auf einem anderen Gerät weiterüben.</p><div><button class="btn accent" data-act="code">Code anzeigen</button></div></div>
+  <p class="muted small">Ein Wort gilt als <b>sicher</b>, wenn du es dreimal hintereinander richtig hattest.</p>
+  ${footer()}`;
+}
+
+let curUnit = 1;
+function unitView(){
+  const p = P(); const u = UNITS.find(x => x.id === curUnit); const all = unitStats(p, BYUNIT[u.id]);
+  const rows = u.secs.map((s, k) => { const st = unitStats(p, s.items); const pct = Math.round(st.safe / st.total * 100); const done = st.safe === st.total;
+    return `<div class="card unit" style="--c:${UNIT_COLOR[u.id]}"><div class="unit-head"><div class="num" style="font-size:.95rem">${done ? "✓" : k + 1}</div><div style="min-width:0"><h3>${esc(s.name)}</h3><p class="muted small">${st.total} ${st.total === 1 ? "Wort" : "Wörter"}</p></div></div>
+      <div class="bar" role="img" aria-label="${pct} Prozent sicher"><i style="width:${pct}%"></i></div>
+      <div class="meta"><span>${st.safe} von ${st.total} sicher</span><span>${st.seen} geübt</span></div>
+      <button class="btn small" style="background:var(--c)" data-act="play" data-mode="unit" data-unit="${u.id}" data-sec="${k}">${esc(s.name)} üben</button></div>`; }).join("");
+  return `${header(`<button class="btn ghost small" data-act="home">Zurück</button>`)}
+  <div class="stack" style="--c:${UNIT_COLOR[u.id]}"><h1>${esc(u.name)}: ${esc(u.title)}</h1>
+  <p class="muted">Übe immer das Theme, das ihr gerade im Unterricht macht. Wiederholt werden die vorherigen Themes in der gemischten Runde.</p>
+  <div class="chips"><span class="chip"><b>${all.safe}</b> von ${all.total} Wörtern sicher</span></div></div>
+  <div class="grid2">${rows}</div>
+  <div class="card stack"><h3>Ganze Unit</h3><p class="muted small">Alle Themes von ${esc(u.name)} gemischt, gut vor einer Probe.</p><div><button class="btn" style="background:${UNIT_COLOR[u.id]}" data-act="play" data-mode="unit" data-unit="${u.id}">${esc(u.name)} komplett üben</button></div></div>`;
+}
+
+const TYPE_LABEL = {mcEnDe:"Was heißt das auf Deutsch?", mcDeEn:"Wie heißt das auf Englisch?", type:"Schreib das englische Wort", match:"Paare finden", gap:"Lückentext",
+  vform:"Unregelmäßige Verben", vmc:"Unregelmäßige Verben", vthree:"Unregelmäßige Verben", vmatch:"Verben-Paare"};
+const FORM_NAME = {past:"Simple Past", pp:"Past Participle"};
+
+function gameView(){
+  const st = round.steps[round.i]; const pct = Math.round(round.i / round.steps.length * 100);
+  const head = `<div class="gamehead"><button class="btn ghost small" data-act="leave" aria-label="Runde beenden">Beenden</button><div class="progress" role="progressbar" aria-valuenow="${round.i}" aria-valuemax="${round.steps.length}"><i style="width:${pct}%"></i></div><span class="chip"><b>${round.points}</b> richtig</span></div>`;
+  return head + `<div class="qcard" id="q"><div class="qtype">${round.mode.kind === "unit" && round.mode.sec !== undefined ? esc(UNITS.find(x => x.id === round.mode.unit).name + " · " + UNITS.find(x => x.id === round.mode.unit).secs[round.mode.sec].name) + " · " : ""}${TYPE_LABEL[st.t]} · Aufgabe ${round.i + 1} von ${round.steps.length}</div>${stepBody(st)}<div id="fb"></div></div>`;
+}
+function stepBody(st){
+  const it = st.item;
+  switch (st.t){
+    case "mcEnDe": return `<div class="prompt"><span class="word">${esc(it.en)}</span>${speakBtn(cleanEn(it.en))}</div>
+      <div class="opts">${st.options.map((o,k) => `<button class="opt" data-act="mc" data-k="${k}">${esc(o.de)}</button>`).join("")}</div>`;
+    case "mcDeEn": return `<div class="prompt"><span class="word">${esc(it.de)}</span></div>
+      <div class="opts">${st.options.map((o,k) => `<button class="opt" data-act="mc" data-k="${k}">${esc(o.en)}</button>`).join("")}</div>`;
+    case "type": return `<div class="prompt"><span class="word">${esc(it.de)}</span></div>
+      <p class="hint" aria-label="Hinweis: Anfangsbuchstabe">${esc(letterHint(it.en))}</p>
+      <form class="row" data-form="type"><input class="field" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Englisch eingeben" style="flex:1;min-width:0" autofocus><button class="btn" type="submit">Prüfen</button></form>`;
+    case "gap": return `<p class="muted small">Wähle für jede Lücke das passende Wort. Jedes Wort passt genau einmal.</p>
+      <div>${st.items.map((x,k) => { const [a,b] = esc(x.s).split("___"); return `<div class="gapline"><span>${a}</span><select id="g${k}" data-gap="${k}" aria-label="Lücke ${k+1}"><option value="">wählen …</option>${st.bank.map(w => `<option>${esc(w)}</option>`).join("")}</select><span>${b}</span></div>`; }).join("")}</div>
+      <button class="btn" data-act="gapcheck" id="gapbtn" disabled>Prüfen</button>`;
+    case "match": case "vmatch": {
+      const left = st.items, right = st._right || (st._right = shuffle(st.items));
+      const L = x => st.t === "match" ? x.en : x.inf, R = x => st.t === "match" ? x.de : x.past.replace("/", " / ");
+      return `<p class="muted small">${st.t === "match" ? "Tippe links ein englisches Wort an und dann rechts die deutsche Bedeutung." : "Tippe links den Infinitiv an und dann rechts die passende Simple-Past-Form."}</p>
+      <div class="match"><div class="col">${left.map(x => `<button class="mbtn" data-act="ml" data-id="${x.id}">${esc(L(x))}</button>`).join("")}</div>
+      <div class="col">${right.map(x => `<button class="mbtn" data-act="mr" data-id="${x.id}">${esc(R(x))}</button>`).join("")}</div></div>`; }
+    case "vform": return `<div class="prompt"><span class="word">to ${esc(it.inf)}</span>${speakBtn(it.inf)}</div>
+      <p>Wie heißt das <b>${FORM_NAME[st.form]}</b>? <span class="muted">(${esc(it.de)})</span></p>
+      <form class="row" data-form="vform"><input class="field" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${FORM_NAME[st.form]}" style="flex:1;min-width:0" autofocus><button class="btn" type="submit">Prüfen</button></form>`;
+    case "vmc": return `<div class="prompt"><span class="word">to ${esc(it.inf)}</span>${speakBtn(it.inf)}</div>
+      <p>Welche Form ist das <b>${FORM_NAME[st.form]}</b>?</p>
+      <div class="opts">${st.options.map((o,k) => `<button class="opt" data-act="vmc" data-k="${k}">${esc(o.replace("/", " / "))}</button>`).join("")}</div>`;
+    case "vthree": return `<div class="prompt"><span class="word">${esc(it.de)}</span></div>
+      <p>Schreib alle drei Formen auf Englisch.</p>
+      <form class="stack" data-form="vthree"><div class="three">
+        <label>Infinitive<input class="field" id="f0" autocomplete="off" autocapitalize="off" spellcheck="false" autofocus></label>
+        <label>Simple Past<input class="field" id="f1" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+        <label>Past Participle<input class="field" id="f2" autocomplete="off" autocapitalize="off" spellcheck="false"></label></div>
+        <button class="btn" type="submit">Prüfen</button></form>`;
+  }
+  return "";
+}
+const verbLine = v => `<b>${esc(v.inf)} – ${esc(v.past.replace("/", " / "))} – ${esc(v.pp)}</b> <span class="muted">(${esc(v.de)})</span>`;
+function feedback(kind, title, extra){
+  round.answered = true;
+  $("#fb").innerHTML = `<div class="fb ${kind}"><strong>${title}</strong>${extra || ""}</div><div class="row" style="margin-top:12px"><button class="btn accent block" data-act="next" id="nextbtn">${round.i + 1 < round.steps.length ? "Weiter" : "Ergebnis ansehen"}</button></div>`;
+  $("#q").querySelectorAll(".field, button.opt, select, form button").forEach(e => e.disabled = true);
+  $("#nextbtn").focus();
+}
+const PRAISE = ["Richtig!", "Super!", "Genau!", "Stark!", "Klasse!"];
+const praise = () => PRAISE[Math.floor(Math.random() * PRAISE.length)];
+
+function answerMC(k){
+  const st = round.steps[round.i]; if (round.answered) return;
+  const it = st.item, chosen = st.options[k];
+  const ok = st.t === "mcEnDe" ? norm(chosen.de) === norm(it.de) : norm(chosen.en) === norm(it.en);
+  const btns = [...document.querySelectorAll(".opt")];
+  st.options.forEach((o, j) => { const right = st.t === "mcEnDe" ? norm(o.de) === norm(it.de) : norm(o.en) === norm(it.en); if (right) btns[j].classList.add("ok"); });
+  if (!ok) btns[k].classList.add("bad");
+  record(it, ok);
+  feedback(ok ? "ok" : "bad", ok ? praise() : "Leider falsch", `<span><b>${esc(it.en)}</b> = ${esc(it.de)}</span><span class="ex">${filled(it)}</span>`);
+  if (ok && st.t === "mcDeEn") say(cleanEn(it.en));
+}
+function answerType(){
+  const st = round.steps[round.i]; if (round.answered) return;
+  const inp = $("#ans"); if (!inp.value.trim()) { inp.focus(); return; }
+  const res = checkTyped(inp.value, wordVariants(st.item));
+  inp.classList.add(res === "bad" ? "bad" : "ok");
+  record(st.item, res !== "bad");
+  const it = st.item;
+  if (res === "ok") feedback("ok", praise(), `<span class="ex">${filled(it)}</span>`);
+  else if (res === "close") feedback("warn", "Fast richtig! Achte auf die Schreibweise.", `<span>Richtig geschrieben: <b>${esc(cleanEn(it.en))}</b></span><span class="ex">${filled(it)}</span>`);
+  else feedback("bad", "Leider falsch", `<span>Richtig ist: <b>${esc(cleanEn(it.en))}</b></span><span class="ex">${filled(it)}</span>`);
+  say(cleanEn(it.en));
+}
+function answerVForm(){
+  const st = round.steps[round.i]; if (round.answered) return;
+  const inp = $("#ans"); if (!inp.value.trim()) { inp.focus(); return; }
+  const v = st.item; const res = checkTyped(inp.value, formVariants(v[st.form]));
+  const ok = res === "ok";
+  inp.classList.add(ok ? "ok" : "bad"); record(v, ok);
+  feedback(ok ? "ok" : "bad", ok ? praise() : (res === "close" ? "Knapp daneben, achte auf die Schreibweise." : "Leider falsch"), `<span>${verbLine(v)}</span>`);
+}
+function answerVMC(k){
+  const st = round.steps[round.i]; if (round.answered) return;
+  const v = st.item; const ok = st.options[k] === v[st.form];
+  const btns = [...document.querySelectorAll(".opt")];
+  st.options.forEach((o, j) => { if (o === v[st.form]) btns[j].classList.add("ok"); });
+  if (!ok) btns[k].classList.add("bad");
+  record(v, ok);
+  feedback(ok ? "ok" : "bad", ok ? praise() : "Leider falsch", `<span>${verbLine(v)}</span>`);
+}
+function answerVThree(){
+  const st = round.steps[round.i]; if (round.answered) return;
+  const v = st.item; const forms = [v.inf, v.past, v.pp];
+  const ins = [0,1,2].map(k => $("#f"+k));
+  const empty = ins.find(i => !i.value.trim()); if (empty) { empty.focus(); return; }
+  let all = true;
+  ins.forEach((inp, k) => { const ok = formVariants(forms[k]).includes(norm(inp.value)); inp.classList.add(ok ? "ok" : "bad"); if (!ok) all = false; });
+  record(v, all);
+  feedback(all ? "ok" : "bad", all ? praise() : "Nicht ganz", `<span>${verbLine(v)}</span>`);
+}
+function gapChange(){ const st = round.steps[round.i]; const b = $("#gapbtn"); if (b) b.disabled = st.items.some((_,k) => !$("#g"+k).value); }
+function answerGap(){
+  const st = round.steps[round.i]; if (round.answered) return;
+  let right = 0;
+  st.items.forEach((x, k) => {
+    const sel = $("#g"+k); const ok = norm(sel.value) === norm(x.a);
+    sel.classList.add(ok ? "ok" : "bad"); record(x, ok); if (ok) right++;
+    else sel.insertAdjacentHTML("afterend", `<span class="fix">→ ${esc(x.a)}</span>`);
+  });
+  const all = right === st.items.length;
+  feedback(all ? "ok" : (right ? "warn" : "bad"), all ? "Alle Lücken richtig!" : `${right} von ${st.items.length} Lücken richtig`, all ? "" : `<span>Die richtigen Wörter stehen jetzt grün neben den Lücken.</span>`);
+}
+// Paare finden
+let matchSel = null;
+function matchLeft(btn){
+  if (round.answered || btn.classList.contains("done")) return;
+  document.querySelectorAll('.mbtn[data-act="ml"]').forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel"); matchSel = btn.dataset.id;
+}
+function matchRight(btn){
+  const st = round.steps[round.i];
+  if (round.answered || btn.classList.contains("done") || !matchSel) return;
+  st._wrong = st._wrong || new Set(); st._done = st._done || new Set();
+  const lb = document.querySelector(`.mbtn[data-act="ml"][data-id="${matchSel}"]`);
+  const a = BYID[matchSel], b = BYID[btn.dataset.id];
+  const same = st.t === "match" ? norm(a.de) === norm(b.de) : norm(a.past) === norm(b.past);
+  if (same) {
+    lb.classList.remove("sel"); lb.classList.add("done"); btn.classList.add("done"); lb.disabled = btn.disabled = true;
+    st._done.add(matchSel); record(a, !st._wrong.has(matchSel)); matchSel = null;
+    if (st._done.size === st.items.length) {
+      const errs = st._wrong.size;
+      feedback(errs ? "warn" : "ok", errs ? `Geschafft, mit ${errs} ${errs === 1 ? "Fehler" : "Fehlern"}` : "Alle Paare beim ersten Versuch!", st.t === "match" ? "" : `<span>Die Wörter mit Fehlern kommen bald wieder dran.</span>`);
+    }
+  } else {
+    st._wrong.add(matchSel);
+    btn.classList.add("shake"); setTimeout(() => btn.classList.remove("shake"), 450);
+  }
+}
+function nextStep(){
+  round.answered = false; matchSel = null; round.i++;
+  if (round.i >= round.steps.length) return finishRound();
+  save(); render();
+}
+function finishRound(){
+  const p = P(); p.rounds++; const d = today(); if (!p.days.includes(d)) p.days.push(d); if (p.days.length > 120) p.days = p.days.slice(-120);
+  const perfect = round.points === round.max && round.max > 0;
+  if (perfect) p.xp += 20;
+  BADGES.forEach(b => { if (!p.badges.includes(b.id) && b.test(p, {perfect})) { p.badges.push(b.id); round.newBadges.push(b); } });
+  round.perfect = perfect; save(); screen = "result"; render();
+}
+function resultView(){
+  const p = P(); const gained = p.xp - round.xp0; const misses = [...round.misses.values()];
+  const msg = round.perfect ? "Perfekte Runde! Du bekommst 20 Bonus-XP." : round.points / Math.max(1, round.max) >= .7 ? "Gut gemacht! Die Fehler kommen in den nächsten Runden wieder dran." : "Dranbleiben! Übe gleich noch eine Runde, dann sitzen die Wörter besser.";
+  return `${header()}
+  <div class="card stack" style="text-align:center;align-items:center">
+    <p class="qtype">Runde geschafft</p>
+    <div class="result-score">${round.points} / ${round.max}</div>
+    <p>richtige Antworten · <b>+${gained} XP</b></p>
+    <p class="muted">${msg}</p>
+  </div>
+  ${round.newBadges.length ? `<div class="card stack"><h3>Neues Abzeichen!</h3><div class="badges">${round.newBadges.map(b => `<span class="badge on">${medal(true)}${esc(b.name)}</span>`).join("")}</div></div>` : ""}
+  ${misses.length ? `<div class="card stack"><h3>Diese Wörter üben wir noch</h3><ul class="misslist">${misses.map(m => m.kind === "v" ? `<li><span><b>${esc(m.inf)} – ${esc(m.past.replace("/"," / "))} – ${esc(m.pp)}</b></span><span>${esc(m.de)}</span></li>` : `<li><span><b>${esc(m.en)}</b></span><span>${esc(m.de)}</span></li>`).join("")}</ul></div>` : ""}
+  <div class="row"><button class="btn accent" data-act="again" style="flex:1">Noch eine Runde</button><button class="btn ghost" data-act="leave" style="flex:1">Zur Übersicht</button></div>`;
+}
+function codeView(){
+  const code = encodeProfile(P());
+  return `${header(`<button class="btn ghost small" data-act="home">Zurück</button>`)}
+  <div class="card stack"><h2>Dein Fortschrittscode</h2>
+  <p>Kopiere den Code und gib ihn deiner Lehrkraft, zum Beispiel über die Lernplattform oder per Mail. Der Code zeigt deinen Stand von heute.</p>
+  <textarea class="code" id="codebox" readonly>${esc(code)}</textarea>
+  <div class="row"><button class="btn accent" data-act="copy">Code kopieren</button><span id="copymsg" class="muted small"></span></div>
+  <p class="muted small">Auf einem anderen Gerät kannst du mit diesem Code an derselben Stelle weiterüben. Wähle dort „Ich habe schon einen Fortschrittscode“.</p></div>`;
+}
+function restoreView(){
+  return `${header(`<button class="btn ghost small" data-act="back-start">Zurück</button>`)}
+  <form class="card stack" data-form="restore"><h2>Mit Code weiterüben</h2>
+  <p>Füge hier deinen Fortschrittscode ein.</p>
+  <textarea class="code" id="restorebox" placeholder="VQ1. …" autofocus></textarea>
+  <div id="restoremsg"></div>
+  <button class="btn accent" type="submit">Fortschritt laden</button></form>`;
+}
+
+// ---------- Lehrer-Ansicht ----------
+let teacherRows = null, teacherInput = "";
+function teacherView(){
+  return `${header(`<button class="btn ghost small" data-act="teacher-back">Zurück</button>`)}
+  <div class="card stack"><h2>Klassenübersicht</h2>
+    <p>Füge die Fortschrittscodes deiner Schülerinnen und Schüler ein, gern alle auf einmal. Die Auswertung passiert nur hier im Browser.</p>
+    <textarea class="code" id="tcodes" placeholder="VQ1. …">${esc(teacherInput)}</textarea>
+    <div class="row"><button class="btn" data-act="tread">Auswerten</button><span id="tmsg" class="muted small"></span></div>
+  </div>
+  ${teacherRows ? teacherTable() : ""}`;
+}
+function teacherTable(){
+  const rows = teacherRows;
+  if (!rows.length) return `<div class="notice">Es wurde kein gültiger Code gefunden.</div>`;
+  const pctCell = (s) => { const pc = Math.round(s.safe / s.total * 100); return `<td>${pc} %<span class="mini"><i style="width:${pc}%"></i></span></td>`; };
+  const trouble = new Map();
+  rows.forEach(r => { r.prof && Object.entries(r.prof.box).forEach(([id, b]) => { if (b === 0) trouble.set(id, (trouble.get(id) || 0) + 1); }); });
+  const top = [...trouble.entries()].sort((a,b) => b[1] - a[1]).slice(0, 12);
+  return `<div class="card stack"><h3>${rows.length} ${rows.length === 1 ? "Schüler/in" : "Schülerinnen und Schüler"}</h3>
+  <div class="tablewrap"><table><thead><tr><th>Name</th><th>Stand vom</th><th>Runden</th><th>XP</th><th>Richtig</th>${UNITS.map(u => `<th>${u.name}</th>`).join("")}<th>Verben</th><th>Zuletzt geübt</th></tr></thead>
+  <tbody>${rows.map(r => `<tr><td><b>${esc(r.prof.name)}</b></td><td>${fmtDate(r.date)}</td><td>${r.prof.rounds}</td><td>${r.prof.xp}</td><td>${r.prof.ans ? Math.round(r.prof.cor / r.prof.ans * 100) : 0} %</td>${UNITS.map(u => pctCell(unitStats(r.prof, BYUNIT[u.id]))).join("")}${pctCell(unitStats(r.prof, VERBS))}<td>${fmtDate(r.prof.days.slice().sort().pop())}</td></tr>`).join("")}</tbody></table></div>
+  <p class="muted small">Prozentwerte = Anteil der Wörter, die sicher sitzen (dreimal hintereinander richtig).</p></div>
+  ${top.length ? `<div class="card stack"><h3>Diese Wörter machen gerade Probleme</h3><p class="muted small">Anzahl der Schüler/innen, bei denen das Wort zuletzt falsch war.</p><ul class="misslist">${top.map(([id,n]) => { const x = BYID[id]; if (!x) return ""; return `<li><span><b>${esc(x.kind === "v" ? x.inf + " – " + x.past + " – " + x.pp : x.en)}</b> <span class="muted small">${x.kind === "v" ? "Verb" : "Unit " + x.unit}</span></span><span>${n}</span></li>`; }).join("")}</ul></div>` : ""}`;
+}
+function teacherRead(){
+  teacherInput = $("#tcodes").value;
+  const found = teacherInput.match(/VQ1\.[A-Za-z0-9+/=]+\.[a-z0-9]{4}/g) || [];
+  const byName = new Map(); let bad = 0;
+  found.forEach(c => { const o = decodeCode(c); if (!o) { bad++; return; } const prof = profileFromCode(o); const key = prof.name.toLowerCase(); const prev = byName.get(key); if (!prev || (o.d || "") >= prev.date) byName.set(key, {prof, date:o.d}); });
+  teacherRows = [...byName.values()].sort((a,b) => a.prof.name.localeCompare(b.prof.name, "de"));
+  render();
+  if (bad) $("#tmsg").textContent = bad + (bad === 1 ? " Code war" : " Codes waren") + " beschädigt und wurde übersprungen.";
+}
+
+// ---------- Ereignisse ----------
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-act],[data-say]"); if (!t) return;
+  if (t.dataset.say !== undefined && !t.dataset.act) { say(t.dataset.say); return; }
+  const a = t.dataset.act;
+  if (a === "pick") { store.current = t.dataset.name; save(); screen = "home"; render(); }
+  else if (a === "switch") { screen = "start"; render(); }
+  else if (a === "openunit") { curUnit = +t.dataset.unit; screen = "unit"; render(); window.scrollTo(0,0); }
+  else if (a === "play") { const mode = t.dataset.mode === "unit" ? {kind:"unit", unit:+t.dataset.unit} : {kind:t.dataset.mode}; if (t.dataset.sec !== undefined) mode.sec = +t.dataset.sec; buildRound(mode); screen = "game"; render(); window.scrollTo(0,0); }
+  else if (a === "again") { buildRound(round.mode); screen = "game"; render(); window.scrollTo(0,0); }
+  else if (a === "home") { save(); screen = "home"; render(); window.scrollTo(0,0); }
+  else if (a === "leave") { save(); if (round && round.mode.kind === "unit") { curUnit = round.mode.unit; screen = "unit"; } else screen = "home"; render(); window.scrollTo(0,0); }
+  else if (a === "mc") answerMC(+t.dataset.k);
+  else if (a === "vmc") answerVMC(+t.dataset.k);
+  else if (a === "gapcheck") answerGap();
+  else if (a === "ml") matchLeft(t);
+  else if (a === "mr") matchRight(t);
+  else if (a === "next") { nextStep(); window.scrollTo(0,0); }
+  else if (a === "code") { screen = "code"; render(); }
+  else if (a === "copy") { const box = $("#codebox"); const done = m => $("#copymsg").textContent = m;
+    try { navigator.clipboard.writeText(box.value).then(() => done("Kopiert."), () => { box.select(); done("Markiert. Jetzt mit Strg+C oder „Kopieren“ übernehmen."); }); }
+    catch(err) { box.select(); done("Markiert. Jetzt mit Strg+C oder „Kopieren“ übernehmen."); } }
+  else if (a === "restore") { screen = "code-restore"; render(); }
+  else if (a === "back-start") { screen = "start"; render(); }
+  else if (a === "teacher") { screen = "teacher"; render(); window.scrollTo(0,0); }
+  else if (a === "teacher-back") { screen = P() ? "home" : "start"; render(); }
+  else if (a === "tread") teacherRead();
+  if (t.dataset.say && t.dataset.act) say(t.dataset.say);
+});
+document.addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target;
+  if (f.id === "newform") {
+    const name = $("#newname").value.trim().replace(/\s+/g, " ").slice(0, 24); if (!name) { $("#newname").focus(); return; }
+    if (!store.profiles[name]) store.profiles[name] = newProfile(name);
+    store.current = name; save(); screen = "home"; render(); return;
+  }
+  const k = f.dataset.form;
+  if (k === "type") answerType(); else if (k === "vform") answerVForm(); else if (k === "vthree") answerVThree();
+  else if (k === "restore") {
+    const o = decodeCode($("#restorebox").value);
+    if (!o) { $("#restoremsg").innerHTML = `<div class="fb bad"><strong>Der Code passt nicht.</strong><span>Kopiere ihn bitte noch einmal vollständig. Er beginnt mit „VQ1.“.</span></div>`; return; }
+    const p = profileFromCode(o); store.profiles[p.name] = p; store.current = p.name; save(); screen = "home"; render();
+  }
+});
+document.addEventListener("change", e => { if (e.target.matches("[data-gap]")) gapChange(); });
+document.addEventListener("keydown", e => {
+  if (screen !== "game" || !round) return;
+  if (e.key === "Enter" && round.answered && !e.target.closest("form")) { e.preventDefault(); nextStep(); window.scrollTo(0,0); }
+  const st = round.steps[round.i];
+  if (!round.answered && st && ["mcEnDe","mcDeEn","vmc"].includes(st.t) && /^[1-4]$/.test(e.key) && e.target.tagName !== "INPUT") {
+    st.t === "vmc" ? answerVMC(+e.key - 1) : answerMC(+e.key - 1);
+  }
+});
+
+load();
+if (store.current && store.profiles[store.current]) screen = "home";
+render();
+</script>
+
+</body>
+</html>
